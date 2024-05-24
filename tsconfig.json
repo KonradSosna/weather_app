@@ -25,7 +25,8 @@
 		"paths": {
 			"@/*": ["./src/*"],
 			"@types": ["./src/types/index"],
-			"@utils": ["./src/utils"]
+			"@utils": ["./src/utils"],
+			"@hooks": ["./src/hooks"]
 		}
 	},
 	"include": ["src"],

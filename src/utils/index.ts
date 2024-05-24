@@ -1,2 +1,2 @@
 export * from './searchHistory';
-export * from './useFetchData';
+export * from './fetchData.ts';
