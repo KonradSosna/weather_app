@@ -1,24 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useDebouncedValue } from '@hooks';
 import { DataSchema } from '@types';
-import { fetchData, saveSearchHistory } from '@utils';
-import { useQuery } from '@tanstack/react-query';
+import { fetchData } from '@utils';
+import { useMutation } from '@tanstack/react-query';
+import { Chart } from './Chart';
 
 function WeatherApp() {
-	const [city, setCity] = useState('warsaw');
+	const [city, setCity] = useState('');
 	const debouncedSearchTerm = useDebouncedValue(city);
 
-	const { data, error, isPending } = useQuery<DataSchema>({
-		queryKey: ['search', debouncedSearchTerm],
-		queryFn: fetchData,
+	const { mutate, error, data, isPending } = useMutation<DataSchema>({
+		mutationFn: () => fetchData(debouncedSearchTerm),
 	});
 
 	useEffect(() => {
-		if (debouncedSearchTerm && !error && !data?.error) {
-			saveSearchHistory(debouncedSearchTerm);
-			// setCity('');
+		if (debouncedSearchTerm) {
+			mutate();
 		}
-	}, [debouncedSearchTerm, error, data]);
+	}, [debouncedSearchTerm, mutate]);
 
 	const saved = localStorage.getItem('searchHistroy');
 	const searchHistory: Array<string> = JSON.parse(saved || '[]');
@@ -32,19 +31,19 @@ function WeatherApp() {
 					<input
 						className="h-[50px] p-2 w-full max-w-[270px] mx-2 my-1"
 						type="text"
-						placeholder="Choose city (q)"
+						placeholder="Choose city"
 						value={city}
 						onChange={(event) => setCity(event.target.value)}
 					/>
 				</label>
 				{searchHistory.length > 0 && (
-					<div className="flex gap-x-2 items-center">
+					<div className="flex gap-x-2 items-center justify-center">
 						Last search:
-						{searchHistory.map((item, index: number) => (
+						{searchHistory.map((item) => (
 							<button
 								className="py-1 px-3"
 								onClick={() => setCity(item)}
-								key={index}
+								key={item}
 							>
 								{item}
 							</button>
@@ -54,8 +53,7 @@ function WeatherApp() {
 			</section>
 
 			<section className="min-h-[110px] mt-5">
-				{error && <div>Something went wrong ...</div>}
-				{data?.error && <p>{data.error.message}</p>}
+				{error && <p>{error.message}</p>}
 
 				{isPending && <div>Loading ...</div>}
 				{data?.current && !error && (
@@ -73,6 +71,9 @@ function WeatherApp() {
 					</div>
 				)}
 			</section>
+			<div className="size-[600px] flex items-center justify-center">
+				<Chart data={data} loading={isPending} />
+			</div>
 		</main>
 	);
 }

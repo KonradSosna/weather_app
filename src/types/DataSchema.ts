@@ -3,5 +3,4 @@ export type DataSchema = {
 	location: {
 		name: string;
 	};
-	error: Error;
 };
