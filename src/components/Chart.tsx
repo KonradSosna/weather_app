@@ -1,4 +1,4 @@
-import { DataSchema } from '@types';
+import { ChartProps } from '@types';
 import { scaleValue } from '@utils';
 import {
 	Chart as ChartJS,
@@ -21,11 +21,6 @@ ChartJS.register(
 	RadialLinearScale,
 	Filler
 );
-
-type ChartProps = {
-	data: DataSchema | undefined;
-	loading: boolean;
-};
 
 export const Chart: FC<ChartProps> = memo(({ data, loading }) => {
 	const chartData = {
@@ -92,4 +87,3 @@ export const Chart: FC<ChartProps> = memo(({ data, loading }) => {
 	if (loading) return <MoonLoader color="rgba(174,194,236, 1)" size={200} />;
 	if (data) return <Radar data={chartData} options={options} />;
 });
-Chart.displayName = 'Chart';

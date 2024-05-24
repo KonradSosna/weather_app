@@ -7,9 +7,11 @@ export const saveSearchHistory = (city: string) => {
 
 	let updatedValue = initialValue;
 
-	updatedValue.unshift(city);
-	updatedValue = [...new Set(updatedValue)];
-	updatedValue.length > 4 && updatedValue.pop();
+	if (!initialValue.includes(city)) {
+		updatedValue.unshift(city);
+		updatedValue = [...new Set(updatedValue)];
+		updatedValue.length > 4 && updatedValue.pop();
 
-	localStorage.setItem('searchHistroy', JSON.stringify([...updatedValue]));
+		localStorage.setItem('searchHistroy', JSON.stringify([...updatedValue]));
+	}
 };

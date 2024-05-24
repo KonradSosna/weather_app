@@ -11,7 +11,7 @@ export function createRadialGradient(context: ContextType) {
 		return;
 	}
 
-	const colors = ['#CFC5C2', '#E9E8E8', 'white'];
+	const colors = ['#ddac9d', '#E9E8E8', 'white'];
 
 	const chartWidth = chartArea.right - chartArea.left;
 	const chartHeight = chartArea.bottom - chartArea.top;
