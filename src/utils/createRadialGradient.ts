@@ -1,50 +1,48 @@
 import { ContextType } from '@/types';
 
-const cache = new Map();
-let width: number | null = null;
-let height: number | null = null;
+export const canvasBackgroundColor = {
+	id: 'canvasBackgroundColor',
+	beforeDraw(chart: ContextType) {
+		const { ctx } = chart;
 
-export function createRadialGradient(context: ContextType) {
-	const chartArea = context.chart.chartArea;
-	if (!chartArea) {
-		// This case happens on initial chart load
-		return;
-	}
+		//white
+		ctx.save();
+		ctx.fillStyle = 'white';
+		ctx.beginPath();
+		ctx.moveTo(308, 35);
+		ctx.lineTo(545, 445);
+		ctx.lineTo(70, 445);
+		ctx.closePath();
+		ctx.fill();
 
-	const colors = ['#ddac9d', '#E9E8E8', 'white'];
+		//gray
+		ctx.save();
+		ctx.fillStyle = '#E9E8E8';
+		ctx.beginPath();
+		ctx.moveTo(308, 90);
+		ctx.lineTo(498, 419);
+		ctx.lineTo(118, 419);
+		ctx.closePath();
+		ctx.fill();
 
-	const chartWidth = chartArea.right - chartArea.left;
-	const chartHeight = chartArea.bottom - chartArea.top;
+		//light brown
+		ctx.save();
+		ctx.fillStyle = '#E9DDD7';
+		ctx.beginPath();
+		ctx.moveTo(308, 145);
+		ctx.lineTo(450, 390);
+		ctx.lineTo(166, 390);
+		ctx.closePath();
+		ctx.fill();
 
-	if (width !== chartWidth || height !== chartHeight) {
-		cache.clear();
-	}
-	let gradient = cache.get(colors[0] + colors[1] + colors[2]);
-	if (!gradient) {
-		// Create the gradient because this is either the first render
-		// or the size of the chart has changed
-		width = chartWidth;
-		height = chartHeight;
-		const centerX = (chartArea.left + chartArea.right) / 2;
-		const centerY = (chartArea.top + chartArea.bottom) / 2;
-		const r = Math.min(
-			(chartArea.right - chartArea.left) / 2,
-			(chartArea.bottom - chartArea.top) / 2
-		);
-		const ctx = context.chart.ctx;
-		gradient = ctx.createRadialGradient(
-			centerX,
-			centerY,
-			0,
-			centerX,
-			centerY,
-			r
-		);
-		gradient.addColorStop(0, colors[0]);
-		gradient.addColorStop(0.5, colors[1]);
-		gradient.addColorStop(1, colors[2]);
-		cache.set(colors[0] + colors[1] + colors[2], gradient);
-	}
-
-	return gradient;
-}
+		//dark brown
+		ctx.save();
+		ctx.fillStyle = '#E0CEC8';
+		ctx.beginPath();
+		ctx.moveTo(308, 200);
+		ctx.lineTo(403, 363);
+		ctx.lineTo(213, 363);
+		ctx.closePath();
+		ctx.fill();
+	},
+};

@@ -1,6 +1,8 @@
 import { saveSearchHistory } from './searchHistory';
 
 export const fetchData = async (search: string) => {
+	localStorage.setItem('lastValue', search);
+
 	const result = await fetch(
 		`http://api.weatherapi.com/v1/current.json?key=${
 			import.meta.env.VITE_API_KEY

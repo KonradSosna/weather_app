@@ -1,5 +1,5 @@
 import { ChartProps } from '@types';
-import { scaleValue } from '@utils';
+import { canvasBackgroundColor, scaleValue } from '@utils';
 import {
 	Chart as ChartJS,
 	LineElement,
@@ -19,7 +19,8 @@ ChartJS.register(
 	Tooltip,
 	Legend,
 	RadialLinearScale,
-	Filler
+	Filler,
+	canvasBackgroundColor
 );
 
 export const Chart: FC<ChartProps> = memo(({ data, loading }) => {
@@ -63,24 +64,16 @@ export const Chart: FC<ChartProps> = memo(({ data, loading }) => {
 					stepSize: 1,
 				},
 				grid: {
-					color: [
-						'#94918f',
-						'#A9A5A3',
-						'#9D9D9C',
-						'#D1D1D1',
-						'#D3D3D4',
-						'white',
-					],
+					color: ['#A9A5A3', '#9D9D9C', '#D1D1D1', '#D3D3D4', 'white'],
+					lineWidth: 2,
 				},
-				// backgroundColor: (context: ContextType) =>
-				// 	createRadialGradient(context),
-				backgroundColor: 'gray',
 			},
 		},
 		plugins: {
 			legend: {
 				display: false,
 			},
+			canvasBackgroundColor,
 		},
 	};
 

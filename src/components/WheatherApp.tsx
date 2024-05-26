@@ -7,7 +7,8 @@ import { Chart } from './Chart';
 import { Input } from './Input';
 
 function WeatherApp() {
-	const [city, setCity] = useState('');
+	const initialvalue = localStorage.getItem('lastValue') || '';
+	const [city, setCity] = useState(initialvalue);
 	const debouncedSearchTerm = useDebouncedValue(city);
 
 	const { mutate, error, data, isPending } = useMutation<DataSchema>({
@@ -20,8 +21,9 @@ function WeatherApp() {
 		}
 	}, [debouncedSearchTerm, mutate]);
 
-	const saved = localStorage.getItem('searchHistroy');
-	const searchHistory: Array<string> = JSON.parse(saved || '[]');
+	const searchHistory: string[] = JSON.parse(
+		localStorage.getItem('searchHistroy') || '[]'
+	);
 
 	return (
 		<main className="flex flex-col gap-y-5">
@@ -36,7 +38,8 @@ function WeatherApp() {
 				{data?.current && (
 					<div>
 						<h3>
-							Weather in <span className="capitalize">{searchHistory[0]}</span>
+							Weather in{' '}
+							<span className="capitalize">{data?.location.name}</span>
 						</h3>
 						<ul>
 							<li key={data.location.name}>
