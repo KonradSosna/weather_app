@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useDebouncedValue } from '@hooks';
+import { useEffect, useState } from 'react';
 import { DataSchema } from '@types';
 import { fetchData } from '@utils';
 import { useMutation } from '@tanstack/react-query';
@@ -9,27 +8,20 @@ import { Input } from './Input';
 function WeatherApp() {
 	const initialvalue = localStorage.getItem('lastValue') || '';
 	const [city, setCity] = useState(initialvalue);
-	const debouncedSearchTerm = useDebouncedValue(city);
 
 	const { mutate, error, data, isPending } = useMutation<DataSchema>({
-		mutationFn: () => fetchData(debouncedSearchTerm),
+		mutationFn: () => fetchData(city),
 	});
 
 	useEffect(() => {
-		if (debouncedSearchTerm) {
-			mutate();
-		}
-	}, [debouncedSearchTerm, mutate]);
-
-	const searchHistory: string[] = JSON.parse(
-		localStorage.getItem('searchHistroy') || '[]'
-	);
+		if (city) mutate();
+	}, []);
 
 	return (
-		<main className="flex flex-col gap-y-5">
+		<main className="flex flex-col gap-y-5 items-center">
 			<h1>Weather App</h1>
 			<section className="flex flex-col items-center">
-				<Input city={city} searchHistory={searchHistory} setCity={setCity} />
+				<Input city={city} setCity={setCity} callData={mutate} />
 			</section>
 
 			<section className="min-h-110 mt-5">
@@ -39,7 +31,12 @@ function WeatherApp() {
 					<div>
 						<h3>
 							Weather in{' '}
-							<span className="capitalize">{data?.location.name}</span>
+							<span className="capitalize">
+								{`${data?.location.name}, ${data?.location.region}, ${data?.location.country}`.replace(
+									/ ,/g,
+									''
+								)}
+							</span>
 						</h3>
 						<ul>
 							<li key={data.location.name}>

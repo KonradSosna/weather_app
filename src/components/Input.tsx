@@ -1,24 +1,48 @@
-import { InputProps } from '@types';
-import { memo } from 'react';
+import { fetchLocation } from '@/utils';
+import { useMutation } from '@tanstack/react-query';
+import { InputProps, LocationSchema } from '@types';
+import { memo, useEffect } from 'react';
+import TextInput from 'react-autocomplete-input';
+import 'react-autocomplete-input/dist/bundle.css';
 
 export const Input = memo((props: InputProps) => {
-	const { city, setCity, searchHistory } = props;
+	const { city, setCity, callData } = props;
+
+	const searchHistory: string[] = JSON.parse(
+		localStorage.getItem('searchHistroy') || '[]'
+	);
+
+	const { mutate, data } = useMutation<LocationSchema>({
+		mutationFn: () => fetchLocation(city),
+	});
+
+	const autocompleteOptions =
+		data?.map((item) =>
+			`${item.name}, ${item.region}, ${item.country}`.replace(/ ,/g, '')
+		) || [];
+
+	useEffect(() => {
+		if (city) {
+			mutate();
+		}
+	}, [city, mutate]);
+
 	return (
 		<>
-			<div className="relative w-270">
-				<input
-					data-testid="input"
-					className="h-50 p-2 w-full max-w-270 mx-2 my-1"
-					type="text"
-					placeholder="Choose city"
+			<div className="relative flex gap-x-2 mb-2">
+				<TextInput
+					trigger={''}
+					options={autocompleteOptions}
 					value={city}
-					onChange={(event) => setCity(event.target.value)}
+					onChange={(v) => setCity(v as string)}
+					onSelect={() => callData()}
+					className="w-[300px] pl-1"
 				/>
 				<button
-					className="absolute top-1.5 bg-transparent hover:text-gray-500 right-0 border-none focus:outline-none"
+					className="bg-transparent border border-white hover:text-gray-500 focus:outline-none"
 					onClick={() => setCity('')}
 				>
-					x
+					Clear
 				</button>
 			</div>
 
@@ -29,7 +53,10 @@ export const Input = memo((props: InputProps) => {
 						<button
 							data-testid="history-data-item"
 							className="py-1 px-3"
-							onClick={() => setCity(item)}
+							onClick={() => {
+								setCity(item);
+								callData();
+							}}
 							key={item}
 						>
 							{item}

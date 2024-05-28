@@ -1,5 +1,5 @@
 import { ChartProps } from '@types';
-import { canvasBackgroundColor, scaleValue } from '@utils';
+import { canvasBackgroundColor, customShadow, scaleValue } from '@utils';
 import {
 	Chart as ChartJS,
 	LineElement,
@@ -20,7 +20,8 @@ ChartJS.register(
 	Legend,
 	RadialLinearScale,
 	Filler,
-	canvasBackgroundColor
+	canvasBackgroundColor,
+	customShadow
 );
 
 export const Chart: FC<ChartProps> = memo(({ data, loading }) => {
@@ -29,9 +30,18 @@ export const Chart: FC<ChartProps> = memo(({ data, loading }) => {
 		datasets: [
 			{
 				data: [
-					scaleValue([-10, 40], [0, 5], data?.current.temp_c),
-					scaleValue([0, 100], [0, 5], data?.current.humidity),
-					scaleValue([0, 60], [0, 5], data?.current.wind_kph),
+					{
+						r: scaleValue([-10, 40], [0, 5], data?.current.temp_c),
+						displayValue: `${data?.current.temp_c} °C`,
+					},
+					{
+						r: scaleValue([0, 100], [0, 5], data?.current.humidity),
+						displayValue: `${data?.current.humidity} %`,
+					},
+					{
+						r: scaleValue([0, 60], [0, 5], data?.current.wind_kph),
+						displayValue: `${data?.current.wind_kph} km/h`,
+					},
 				],
 				backgroundColor: 'rgba(174,194,236, 0.6)',
 				borderColor: '#AEB8EC',
@@ -64,7 +74,14 @@ export const Chart: FC<ChartProps> = memo(({ data, loading }) => {
 					stepSize: 1,
 				},
 				grid: {
-					color: ['#A9A5A3', '#9D9D9C', '#D1D1D1', '#D3D3D4', 'white'],
+					color: [
+						'black',
+						'#9D9D9C',
+						'#b4b0ae',
+						'#D1D1D1',
+						'#D3D3D4',
+						'#dfdfe2',
+					],
 					lineWidth: 2,
 				},
 			},
@@ -73,7 +90,15 @@ export const Chart: FC<ChartProps> = memo(({ data, loading }) => {
 			legend: {
 				display: false,
 			},
-			canvasBackgroundColor,
+			tooltip: {
+				callbacks: {
+					// eslint-disable-next-line
+					label: (context: any) => {
+						console.log(context);
+						return context.raw.displayValue;
+					},
+				},
+			},
 		},
 	};
 

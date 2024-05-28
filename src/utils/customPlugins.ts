@@ -7,7 +7,7 @@ export const canvasBackgroundColor = {
 
 		//white
 		ctx.save();
-		ctx.fillStyle = 'white';
+		ctx.fillStyle = '#F2F2F4';
 		ctx.beginPath();
 		ctx.moveTo(308, 35);
 		ctx.lineTo(545, 445);
@@ -44,5 +44,21 @@ export const canvasBackgroundColor = {
 		ctx.lineTo(213, 363);
 		ctx.closePath();
 		ctx.fill();
+	},
+};
+
+export const customShadow = {
+	id: 'customShadow',
+	beforeDatasetsDraw: function (chart: ContextType) {
+		const { ctx } = chart;
+		ctx.save();
+		ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+		ctx.shadowBlur = 40;
+	},
+	afterDatasetsDraw: function (chart: ContextType) {
+		const { ctx } = chart;
+		ctx.save();
+		ctx.shadowColor = 'rgba(0, 0, 0, 0)';
+		ctx.shadowBlur = 40;
 	},
 };
