@@ -24,7 +24,7 @@ function WeatherApp() {
 				<Input city={city} setCity={setCity} callData={mutate} />
 			</section>
 
-			<section className="min-h-110 mt-5">
+			<section className="max-h-110 mt-5">
 				{error && <p>{error.message}</p>}
 				{isPending && <div>Loading ...</div>}
 				{data?.current && (

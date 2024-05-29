@@ -36,7 +36,7 @@ export const Input = memo((props: InputProps) => {
 					value={city}
 					onChange={(v) => setCity(v as string)}
 					onSelect={() => callData()}
-					className="w-[300px] pl-1"
+					className="max-w-[300px] pl-1"
 				/>
 				<button
 					className="bg-transparent border border-white hover:text-gray-500 focus:outline-none"
@@ -47,7 +47,7 @@ export const Input = memo((props: InputProps) => {
 			</div>
 
 			{searchHistory.length > 0 && (
-				<div className="flex gap-x-2 items-center">
+				<div className="flex gap-1 flex-col md:flex-row items-center">
 					Last search:
 					{searchHistory.map((item) => (
 						<button
